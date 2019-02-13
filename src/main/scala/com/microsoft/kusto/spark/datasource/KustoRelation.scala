@@ -8,7 +8,7 @@ import com.microsoft.kusto.spark.utils.KustoQueryUtils
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.sources.{BaseRelation, TableScan}
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.sql.{Row, SQLContext, SparkSession}
 import sun.reflect.generics.reflectiveObjects.NotImplementedException
 
 case class KustoRelation(cluster: String,
@@ -26,12 +26,12 @@ case class KustoRelation(cluster: String,
                          storageContainer: Option[String] = None,
                          storageAccountSecrete: Option[String] = None,
                          isStrogageSecreteKeyNotSas: Boolean = true)
-                        (@transient val sparkContext: SQLContext) extends BaseRelation with TableScan with Serializable {
+                        (@transient val sparkSession: SparkSession) extends BaseRelation with TableScan with Serializable {
 
   private val primaryResultTableIndex = 0
   private val normalizedQuery = KustoQueryUtils.normalizeQuery(query)
 
-  override def sqlContext: SQLContext = sparkContext
+  override def sqlContext: SQLContext = sparkSession.sqlContext
 
   override def schema: StructType = {
     if (customSchema.isDefined) {
@@ -43,11 +43,11 @@ case class KustoRelation(cluster: String,
   override def buildScan(): RDD[Row] = {
     if (isLeanMode) {
       KustoRDD.leanBuildScan(
-        KustoRddParameters(sqlContext, schema, cluster, database, query, appId, appKey, authorityId)
+        KustoRddParameters(sparkSession, schema, cluster, database, query, appId, appKey, authorityId)
       )
     } else {
       KustoRDD.scaleBuildScan(
-        KustoRddParameters(sqlContext, schema, cluster, database, query, appId, appKey, authorityId),
+        KustoRddParameters(sparkSession, schema, cluster, database, query, appId, appKey, authorityId),
         getTransientStorageParameters(storageAccount, storageContainer, storageAccountSecrete, isStrogageSecreteKeyNotSas),
         KustoPartitionInfo(numPartitions, getPartitioningColumn(partitioningColumn, isLeanMode), getPartitioningMode(partitioningMode))
       )

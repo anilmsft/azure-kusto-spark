@@ -73,13 +73,13 @@ class DefaultSource extends CreatableRelationProvider
       readMode.equalsIgnoreCase("lean"),
       numPartitions,
       parameters.get(KustoOptions.KUSTO_PARTITION_COLUMN),
-      parameters.get(KustoOptions.KUSTO_CUSTOM_DATAFRAME_COLUMN_TYPES),
+      parameters.get(KustoOptions.KUSTO_READ_PARTITION_MODE),
       parameters.get(KustoOptions.KUSTO_CUSTOM_DATAFRAME_COLUMN_TYPES),
       parameters.get(KustoOptions.KUSTO_BLOB_STORAGE_ACCOUNT_NAME),
       parameters.get(KustoOptions.KUSTO_BLOB_CONTAINER),
       storageSecrete,
       storageSecreteIsAccountKey
-      )(sqlContext)
+      )(sqlContext.sparkSession)
   }
 
   override def shortName(): String = "kusto"

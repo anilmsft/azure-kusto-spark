@@ -55,7 +55,7 @@ object KustoOptions {
   val KUSTO_READ_MODE: String = newOption("readMode")
 
   // Partitioning parameters
-  val KUSTO_PARTITION_MODE_HASH: String = newOption("hash")
+  val KUSTO_READ_PARTITION_MODE = newOption("partitionMode")
   val KUSTO_LOWER_BOUND: String = newOption("lowerBound")
   val KUSTO_UPPER_BOUND: String = newOption("upperBound")
   val KUSTO_NUM_PARTITIONS: String = newOption("numPartitions")

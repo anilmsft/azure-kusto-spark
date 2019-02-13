@@ -58,7 +58,7 @@ object CslCommandsGenerator{
                                  secret: String,
                                  useKeyNotSas: Boolean = true,
                                  partitionId: Int,
-                                 partitionPredicate: String = ""): String = {
+                                 partitionPredicate: Option[String] = None): String = {
 
     val secretString = if (useKeyNotSas) s""";" h@"$secret"""" else s"""?" h@"$secret""""
     val blobUri = s"https://$storageAccountName.blob.core.windows.net"
@@ -68,7 +68,7 @@ object CslCommandsGenerator{
 
     if (partitionPredicate.nonEmpty)
     {
-      command += s" | where $partitionPredicate"
+      command += s" | where ${partitionPredicate.get}"
     }
 
     command
