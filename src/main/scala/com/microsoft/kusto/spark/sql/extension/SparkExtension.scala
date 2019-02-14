@@ -23,7 +23,6 @@ object SparkExtension {
         .option(KustoOptions.KUSTO_CLUSTER, kustoCluster)
         .option(KustoOptions.KUSTO_DATABASE, database)
         .option(KustoOptions.KUSTO_QUERY, query)
-        .option(KustoOptions.KUSTO_NUM_PARTITIONS, "1")
         .options(properties)
         .load()
     }
